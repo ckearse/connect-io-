@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html id="fp_html">
+  <title>Connect.io! - Chat View</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js"></script>
+
+  <body>
+
+    <style>
+      html{
+        height: 100%;;
+        min-width: 200px;
+        font-family: 'Ubuntu Condensed', sans-serif;
+      }
+      header{
+        width: 100%;
+        height: 10%;
+        min-height: 70px;
+        background-color: #1B9CA1;
+        color: white;
+        padding-top: 2%;
+        padding-bottom: 2%;
+        padding-left: 5%;
+        border-radius: 3px;
+      }
+      button{
+        border-radius: 5px;
+        border: 0px;
+        background-color: rgb(88, 184, 187);
+        margin-top: 10px;
+        color: white;
+      }
+    
+      button:hover{
+        box-shadow: 0 5px rgb(96, 100, 100);
+        transform: translateY(4px);
+      }
+      body{
+        height:75%;
+      }
+      #main-content{
+        height: 50%;
+      }
+      #chat-header{
+        vertical-align: middle;
+      }
+      #chat-area{
+        border-radius: 5px;
+        min-width: 172px;
+        width: 50%; 
+        height: 100%; 
+        display: block;
+        border: solid 1px rgb(88, 184, 187);;
+      }
+      #message_input{
+        padding-left: 5px;
+      }
+
+     
+    </style>
+
+    <header>
+      <div id="chat_header">
+        <h2>Connect.io chat</h2>
+      </div>
+    </header>
+
+    <div id="main-content">
+
+      <h5>Hi, <%= username %>!</h5>
+
+      <input type="hidden" id="username" value="<%= username %>">
+
+      <label>Chat log:
+        <div id="chat-area"></div><br>
+      </label>
+      
+      <input type="text" id="message_input" placeholder="type message here" ><br>
+
+      <button id="send_btn">Send</button>
+
+    </div>
+
+    <script>
+      var socket = io.connect('http://localhost:7777');
+      var chat_area = document.getElementById("chat-area");
+      var message_out = document.getElementById("message_input").value;
+      var btn = document.getElementById('send_btn');
+
+      btn.addEventListener('click', function(){
+        socket.emit('chat', {
+          username: document.getElementById("username").value,
+          message: document.getElementById("message_input").value,
+        });
+
+        document.getElementById("message_input").value = "";
+
+        console.log(document.getElementById("message_input").value);
+      });
+
+      socket.on('chat', data => {
+        chat_area.innerHTML += data.username + ': ' + data.message + '<br>';
+
+        console.log(data);
+      });
+
+    </script>
+
+  </body>
+</html>

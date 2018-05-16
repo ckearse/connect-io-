@@ -1,0 +1,27 @@
+{
+  "name": "connect-io-app",
+  "version": "1.0.0",
+  "description": "A responsive chat app showcasing express-socket.io running on node",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ckearse/connect-io-.git"
+  },
+  "author": "ckearse",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ckearse/connect-io-/issues"
+  },
+  "homepage": "https://github.com/ckearse/connect-io-#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "express-socket.io": "^1.0.3",
+    "node": "^10.0.0"
+  }
+}
