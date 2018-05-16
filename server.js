@@ -3,8 +3,6 @@ const app = express();
 const bodyparser = require('body-parser');
 const socket = require('socket.io');
 
-//app.use(parser({extended: true}));
-
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
@@ -12,8 +10,6 @@ app.use(express.static(__dirname + '/static'));
 app.use(bodyparser.urlencoded({extended: true}));
 
 app.post('/chat', (req, res) => {
-  //username = req.body.username;
-  
   res.render('chat', {'username': req.body.username});
 });
 
