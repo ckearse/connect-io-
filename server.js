@@ -22,6 +22,10 @@ var io = socket(server);
 io.on('connection', socket => {
   console.log('socket connection established!');
 
+  socket.on('connected', data => {
+    console.log("User entered chat: " + data);
+  }),
+
   socket.on('chat', data => {
     io.emit('chat', {
       username: data.username,

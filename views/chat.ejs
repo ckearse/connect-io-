@@ -9,15 +9,19 @@
   <body>
 
     <!-- TODO -->
-    <!--
-      - Add chat indicator when user joins chat
-      - Add chat indicator when user leaves chat/closes browser
-      - Clean up styling, move to designated css files
-      - Add chat indicator for when a user is typing a message
-      - Add side-bar with currently active/logged-in user handles
-      - Handle message send when user activates enter key in message input
-      - Clean up chat label and message styling so that they have more aesthetic spacing/dont look so cluttered
-      - Add a scroll-bar to chat log window
+    <!-- Note: * indicates priority features
+     |x| - *Add a scroll-bar to chat log window
+     |x| - *Add auto-scroll feature in chat window to keep recent messages in view
+     |x| - *Define chat chat window viewport to contain overflow text
+     || - Add chat indicator when user leaves chat/closes browser
+     || - Add chat indicator when user joins chat
+     || - Clean up styling, move to designated css files
+     || - Add chat indicator for when a user is typing a message
+     || - Add side-bar with currently active/logged-in user handles
+     |x| - Handle message send when user activates enter key in message input
+     || - Clean up chat label and message styling so that they have more aesthetic spacing/dont look so cluttered
+     |x| - Add styling for chat messages so that they show some delineation between one another, (individual messages should be discernable at a glance)
+     || - Add unique appearance for messages originating from a specific user so that messages from multiple users can be discerned at a glance
     -->
 
 
@@ -62,16 +66,47 @@
       #chat-area{
         border-radius: 5px;
         min-width: 172px;
+        width: 95%; 
+        height: auto; 
+        display: block;
+        /* border: solid 1px rgb(88, 184, 187); */
+        padding: 5px;
+        overflow-wrap: break-word;
+      }
+      #chat-container{
+        overflow-y: auto;
+        overflow-x: hidden;
+        border-radius: 5px;
+        min-width: 175px;
         width: 50%; 
         height: 100%; 
         display: block;
-        border: solid 1px rgb(88, 184, 187);;
+        border: solid 1px rgb(88, 184, 187);
       }
       #message_input{
         padding-left: 5px;
+        margin-top: 10px;
+        margin-right: 10PX;;
+        border: solid 1px rgb(88, 184, 187);
+        width: 50%;
+        min-width: 175px;
       }
-
-     
+      .chat_message_p{
+        border: solid 1px rgb(88, 184, 187);
+        margin: 5px;
+        padding: 5px;
+      }
+      .chatarea_label{
+        color: rgb(88, 184, 187);
+        font-weight: bold;
+      }
+      #chat-container{
+        margin-top: 5px;
+      }
+      #message_input_div{
+        width: 51%; 
+      }
+      
     </style>
 
     <header>
@@ -82,39 +117,81 @@
 
     <div id="main-content">
 
-      <h5>Hi, <%= username %>!</h5>
+      <h4>Hi, <%= username %>!</h4>
 
       <input type="hidden" id="username" value="<%= username %>">
 
-      <label>Chat log:
-        <div id="chat-area"></div><br>
+      <label class="chatarea_label">Chat log:
+        <div id="chat-container">
+            <div id="chat-area"></div><br>
+        </div>
       </label>
       
-      <input type="text" id="message_input" placeholder="type message here" ><br>
+      <div id="message_input_div">
+        <input type="text" id="message_input" placeholder="type message here" >
 
-      <button id="send_btn">Send</button>
+        <button id="send_btn">Send</button>
+      </div>
 
     </div>
 
     <script>
       var socket = io.connect('http://localhost:7777');
+
+      //AWS server instance
+      //ec2-18-218-46-245.us-east-2.compute.amazonaws.com
+
+      //send message to server console to monitor user logins
+      socket.emit('connected', document.getElementById('username').value);
+
       var chat_area = document.getElementById("chat-area");
+      var chat_container = document.getElementById("chat-container");
       var message_out = document.getElementById("message_input").value;
+      var message_input = document.getElementById("message_input");
       var btn = document.getElementById('send_btn');
 
-      btn.addEventListener('click', function(){
+      //auto scroll newest messages into view
+      function chat_auto_scroll(element_to_scroll){
+        element_to_scroll.scrollIntoView(false);
+
+        console.log('auto scrolled? element: ' + element_to_scroll.id);
+      };
+
+      //Send message
+      function sendMessage(){
         socket.emit('chat', {
           username: document.getElementById("username").value,
           message: document.getElementById("message_input").value,
         });
 
         document.getElementById("message_input").value = "";
+      };
 
-        console.log(document.getElementById("message_input").value);
+      //Send message on Enter
+      message_input.addEventListener('keydown', key => {
+
+        if(key.keyCode === 13){
+          sendMessage(); 
+          console.log('Message should be sent!');
+        } 
+
+      });
+
+      btn.addEventListener('click', function(){
+        sendMessage();
+        // socket.emit('chat', {
+        //   username: document.getElementById("username").value,
+        //   message: document.getElementById("message_input").value,
+        // });
+
+        // document.getElementById("message_input").value = "";
       });
 
       socket.on('chat', data => {
-        chat_area.innerHTML += data.username + ': ' + data.message + '<br>';
+        chat_area.innerHTML += '<p class="chat_message_p">' + data.username + ': ' + data.message + '</p>';
+
+        //auto scroll chat
+        chat_auto_scroll(chat_area);
 
         console.log(data);
       });
