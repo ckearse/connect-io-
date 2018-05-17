@@ -19,9 +19,9 @@
      || - Add chat indicator for when a user is typing a message
      || - Add side-bar with currently active/logged-in user handles
      |x| - Handle message send when user activates enter key in message input
-     || - Clean up chat label and message styling so that they have more aesthetic spacing/dont look so cluttered
+     |x| - Clean up chat label and message styling so that they have more aesthetic spacing/dont look so cluttered
      |x| - Add styling for chat messages so that they show some delineation between one another, (individual messages should be discernable at a glance)
-     || - Add unique appearance for messages originating from a specific user so that messages from multiple users can be discerned at a glance
+     |x| - Add unique appearance for messages originating from a specific user so that messages from multiple users can be discerned at a glance
     -->
 
 
@@ -32,7 +32,7 @@
         font-family: 'Ubuntu Condensed', sans-serif;
       }
       header{
-        width: 100%;
+        width: auto;
         height: 10%;
         min-height: 70px;
         background-color: #1B9CA1;
@@ -74,7 +74,7 @@
         overflow-wrap: break-word;
       }
       #chat-container{
-        overflow-y: auto;
+        overflow-y: scroll;
         overflow-x: hidden;
         border-radius: 5px;
         min-width: 175px;
@@ -88,13 +88,15 @@
         margin-top: 10px;
         margin-right: 10PX;;
         border: solid 1px rgb(88, 184, 187);
+        border-radius: 3px;
         width: 50%;
-        min-width: 175px;
+        min-width: 170px;
       }
       .chat_message_p{
         border: solid 1px rgb(88, 184, 187);
         margin: 5px;
         padding: 5px;
+        border-radius: 5px;
       }
       .chatarea_label{
         color: rgb(88, 184, 187);
@@ -107,6 +109,22 @@
         width: 51%; 
       }
       
+      ::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+      }
+
+      ::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 10px rgb(76, 188, 192);
+      border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background: rgb(76, 188, 192);
+      box-shadow: inset 0 0 6px rgb(8, 97, 100);
+      }
+
     </style>
 
     <header>
@@ -120,6 +138,7 @@
       <h4>Hi, <%= username %>!</h4>
 
       <input type="hidden" id="username" value="<%= username %>">
+      <input type="hidden" id="unq_color" value="<%= unq_color %>">
 
       <label class="chatarea_label">Chat log:
         <div id="chat-container">
@@ -162,8 +181,10 @@
         socket.emit('chat', {
           username: document.getElementById("username").value,
           message: document.getElementById("message_input").value,
+          unique_chat_color: document.getElementById("unq_color").value,
         });
-
+        console.log('Message emmited from FE with color: ' + document.getElementById("unq_color").value);
+        
         document.getElementById("message_input").value = "";
       };
 
@@ -187,8 +208,24 @@
         // document.getElementById("message_input").value = "";
       });
 
+      
       socket.on('chat', data => {
-        chat_area.innerHTML += '<p class="chat_message_p">' + data.username + ': ' + data.message + '</p>';
+        var chat_color = data.unique_chat_color;
+        
+        var color_style = {
+          'background-color': chat_color
+        };
+
+        var p_tag = document.createElement("p");
+          p_tag.style.backgroundColor = chat_color;
+          p_tag.classList.add("chat_message_p");
+          p_tag.innerHTML += data.username + ': ' + data.message;
+          chat_area.appendChild(p_tag);
+
+
+        //chat_area.innerHTML += '<p class="chat_message_p">' + data.username + ': ' + data.message + '</p>';
+
+        // p_tag.style.backgroundColor = chat_color;
 
         //auto scroll chat
         chat_auto_scroll(chat_area);
