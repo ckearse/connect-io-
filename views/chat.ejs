@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html id="fp_html">
+<html id="main_window">
   <title>Connect.io! - Chat View</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,8 +13,8 @@
      |x| - *Add a scroll-bar to chat log window
      |x| - *Add auto-scroll feature in chat window to keep recent messages in view
      |x| - *Define chat chat window viewport to contain overflow text
-     || - Add chat indicator when user leaves chat/closes browser
-     || - Add chat indicator when user joins chat
+     |x| - Add chat indicator when user leaves chat/closes browser
+     |x| - Add chat indicator when user joins chat
      || - Clean up styling, move to designated css files
      || - Add chat indicator for when a user is typing a message
      || - Add side-bar with currently active/logged-in user handles
@@ -98,6 +98,16 @@
         padding: 5px;
         border-radius: 5px;
       }
+      .connected_notification{
+        text-align: center;
+        color: white;
+        background-color: rgb(88, 184, 187);
+      }
+      .disconnect_notification{
+        text-align: center;
+        color: white;
+        background-color: rgb(120, 126, 128);
+      }
       .chatarea_label{
         color: rgb(88, 184, 187);
         font-weight: bold;
@@ -155,13 +165,18 @@
     </div>
 
     <script>
-      var socket = io.connect('http://localhost:7777');
+      var socket = io.connect('http://192.168.1.3:7777');
+      socket.innerHTML = username.value;
+      console.log(socket.innerHTML);
 
       //AWS server instance
       //ec2-18-218-46-245.us-east-2.compute.amazonaws.com
 
       //send message to server console to monitor user logins
-      socket.emit('connected', document.getElementById('username').value);
+      socket.emit('connected', {
+          socket_id: socket.id,
+          username: document.getElementById('username').value
+        });
 
       var chat_area = document.getElementById("chat-area");
       var chat_container = document.getElementById("chat-container");
@@ -200,32 +215,47 @@
 
       btn.addEventListener('click', function(){
         sendMessage();
-        // socket.emit('chat', {
-        //   username: document.getElementById("username").value,
-        //   message: document.getElementById("message_input").value,
-        // });
-
-        // document.getElementById("message_input").value = "";
       });
 
-      
+      socket.on('connected', user => {
+
+        var p_tag = document.createElement("p");
+          p_tag.classList.add("chat_message_p");
+          p_tag.classList.add("connected_notification");
+          p_tag.innerHTML += user.username + " has joined the chat!";
+          chat_area.appendChild(p_tag);
+
+        chat_auto_scroll(chat_area);
+
+      });
+
+      socket.on('disconnecting', user => {
+        console.log(user + 'is leaving');
+        socket.emit('disconnecting', username);
+      });
+
+      socket.on('disconnected', user => {
+
+        var disc_user = user;
+
+        var p_tag = document.createElement("p");
+          p_tag.classList.add("chat_message_p");
+          p_tag.classList.add("disconnect_notification");
+          p_tag.innerHTML = (disc_user + " has left the chat..");
+          chat_area.appendChild(p_tag);
+
+        chat_auto_scroll(chat_area);
+
+      });
+
       socket.on('chat', data => {
         var chat_color = data.unique_chat_color;
         
-        var color_style = {
-          'background-color': chat_color
-        };
-
         var p_tag = document.createElement("p");
           p_tag.style.backgroundColor = chat_color;
           p_tag.classList.add("chat_message_p");
           p_tag.innerHTML += data.username + ': ' + data.message;
           chat_area.appendChild(p_tag);
-
-
-        //chat_area.innerHTML += '<p class="chat_message_p">' + data.username + ': ' + data.message + '</p>';
-
-        // p_tag.style.backgroundColor = chat_color;
 
         //auto scroll chat
         chat_auto_scroll(chat_area);

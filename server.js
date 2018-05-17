@@ -27,23 +27,27 @@ const server = app.listen(7777, function() {
 });
 
 var io = socket(server);
+var users = {};
+
 
 io.on('connection', socket => {
   console.log('socket connection established!');
 
-  socket.on('connected', data => {
-    console.log("User entered chat: " + data);
+  socket.on('connected', user => {
+
+    users[socket.id] = user.username;
+    io.emit('connected', user);
   }),
 
-  socket.on('chat', data => {
-    // io.emit('chat', {
-    //   username: data.username,
-    //   message: data.message,
-    //   unique_chat_color: data.unique_chat_color
-    // });
+  socket.on('disconnecting', function(){
+    
+    //emit message that user has left chat by referencing users[socket.id]
+    io.emit('disconnected', users[socket.id]);
+  });
 
+  socket.on('chat', data => {
     io.emit('chat', data);
-  })
+  });
 
 })
 
