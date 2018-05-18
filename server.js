@@ -28,7 +28,7 @@ const server = app.listen(7777, function() {
 
 var io = socket(server);
 var users = {};
-
+var users_typing = [];
 
 io.on('connection', socket => {
   console.log('socket connection established!');
@@ -37,15 +37,30 @@ io.on('connection', socket => {
 
     users[socket.id] = user.username;
     io.emit('connected', user);
+    console.log(user.username + ' has connected')
   }),
 
   socket.on('disconnecting', function(){
-    
+
     //emit message that user has left chat by referencing users[socket.id]
-    io.emit('disconnected', users[socket.id]);
+    if(users[socket.id] !== null){
+      io.emit('disconnected', users[socket.id]);
+      console.log(users[socket.id] + ' has disconnected')
+    } 
+  });
+
+  socket.on('typing', user => {
+    if(!users_typing.includes(user.username)){
+      users_typing.push(user.username);
+    }
+
+    socket.broadcast.emit('typing', users_typing);
+    console.log(user.username + ' is typing');
+    console.log(users_typing);
   });
 
   socket.on('chat', data => {
+    users_typing = [];
     io.emit('chat', data);
   });
 
