@@ -8,21 +8,23 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
 app.use(express.static(__dirname + '/static'));
-app.use(bodyparser.urlencoded({extended: true}));
+app.use(bodyparser.urlencoded({
+  extended: true
+}));
 
 app.post('/chat', (req, res) => {
-  var chat_color  = randomColor();
+  var chat_color = randomColor();
 
   //add slight opacity via alpha channel ~20%
   chat_color += "33";
 
   res.render('chat', {
     'username': req.body.username,
-    'unq_color': chat_color  
+    'unq_color': chat_color
   });
 });
 
-const server = app.listen(7777, function() {
+const server = app.listen(7777, function () {
   console.log('Express app running on port 7777');
 });
 
@@ -35,32 +37,31 @@ io.on('connection', socket => {
 
   socket.on('connected', user => {
 
-    console.log('**********************************************************************************************************************');
+      console.log('**********************************************************************************************************************');
 
-    users[socket.id] = user.username;
+      users[socket.id] = user.username;
       io.emit('connected', {
-        username: user.username,
-        users: users
+          username: user.username,
+          users: users
+        }
+
+      );
+      console.log(user.username + ' has connected')
+    }),
+
+    socket.on('disconnecting', function () {
+
+      //emit message that user has left chat by referencing users[socket.id]
+      if (users[socket.id] !== null) {
+        io.emit('disconnected', users[socket.id]);
+        console.log(users[socket.id] + ' has disconnected')
+
+        delete users[socket.id];
       }
-    
-    );
-    console.log(users);
-    console.log(user.username + ' has connected')
-  }),
-
-  socket.on('disconnecting', function(){
-
-    //emit message that user has left chat by referencing users[socket.id]
-    if(users[socket.id] !== null){
-      io.emit('disconnected', users[socket.id]);
-      console.log(users[socket.id] + ' has disconnected')
-
-      delete users[socket.id];
-    } 
-  });
+    });
 
   socket.on('typing', user => {
-    if(!users_typing.includes(user.username)){
+    if (!users_typing.includes(user.username)) {
       users_typing.push(user.username);
     }
 
@@ -75,5 +76,3 @@ io.on('connection', socket => {
   });
 
 })
-
-

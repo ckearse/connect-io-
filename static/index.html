@@ -1,119 +1,37 @@
 <!DOCTYPE html>
 <html id="fp_html">
-  <title>Connect.io!</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- <link rel="stylesheet" href="stylesheets/chat-styles.css"> -->
-  <link href="https://fonts.googleapis.com/css?family=Dokdo|Ubuntu+Condensed" rel="stylesheet">
+<title>Connect.io!</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="stylesheets/index-styles.css">
+<link href="https://fonts.googleapis.com/css?family=Dokdo|Ubuntu+Condensed" rel="stylesheet">
 
+<body>
 
-
-  <style>
-    #fp_html{
-      text-align: center;
-      min-height: 300px;
-      min-width: 200px;
-      font-family: 'Ubuntu Condensed', sans-serif;
-    }
-    #fp_header{
-      width: auto;
-      height: 50%;
-      background-color: #1B9CA1;
-      color: white;
-      padding-top: 5%;
-      padding-bottom: 5%;
-      border-radius: 3px;
-    }
-    body{
-      width: auto;
-      height: 100%;
-    }
-    #main-content{
-      padding-top: 25px;
-      padding-left: 20px;
-      padding-right: 30px;
-    }
-    #topic-heading {
-      background-color: #1B9CA1;
-      opacity: .7;
-      color: white;
-      border-radius: 15px;
-      padding: 3px 25px 3px 25px;
-      width: fit-content;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .fp_p{
-      padding-left: 10%;
-      padding-right: 10%;
-      border-radius: 5px;
-    }
-
-    #user-input{
-      margin-top: 40px;
-    }
-
-    button{
-        border-radius: 5px;
-        border: 0px;
-        background-color: rgb(88, 184, 187);
-        color: white;
-    }
-   
-    button:hover{
-      box-shadow: 0 5px rgb(96, 100, 100);
-      transform: translateY(4px);
-    }
-
-    #username_input{
-      text-align: center;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      margin-bottom: 5px;
-      border-radius: 5px;
-      width: 25%;
-      font-family: 'Ubuntu Condensed', sans-serif;
-    }
-    #title{
-      font-family: 'Dokdo', cursive;
-      font-size: 370%;
-    }
-
-  </style>
-
-  <body>
-
-    <header class="center-text" id="fp_header">
-      <div>
-        <h1 id="title">Connect <span style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-left: -17px">.io</span></h1>
-        <h4>Come join the chat!</h4>
-      </div>
-
-      <form action="/chat" method="POST">
-        <input id="username_input" name="username" type="text" placeholder="username">
-        <button id="enter-btn">Enter chat</button>
-      </form>
-    </header>
-
-    <div id="main-content">
-
-          <h3 id="topic-heading">What is it?</h3>
-
-          <div class="detail_div">
-            <p class="fp_p">The one-room web platform to connect anonomously with anyone, anytime! (almost : P)</p>
-          </div>
-
+  <header class="center-text" id="fp_header">
+    <div>
+      <h1 id="title">Connect
+        <span style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-left: -17px">.io</span>
+      </h1>
+      <h4>Come join the chat!</h4>
     </div>
 
-    <footer>
+    <form action="/chat" method="POST">
+      <input id="username_input" name="username" type="text" placeholder="username">
+      <button id="enter-btn">Enter chat</button>
+    </form>
+  </header>
 
-    </footer>
+  <div id="main-content">
 
-    <script>
+    <h3 id="topic-heading">What is it?</h3>
 
-    </script>
+    <div class="detail_div">
+      <p class="fp_p">The one-room web platform to connect anonomously with anyone, anytime! (almost : P)</p>
+    </div>
 
-  </body>
+  </div>
+
+</body>
+
 </html>
