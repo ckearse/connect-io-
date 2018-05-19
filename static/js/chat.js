@@ -1,9 +1,12 @@
-var socket = io.connect('http://ec2-18-218-46-245.us-east-2.compute.amazonaws.com:7777');
+var socket = io.connect('http://localhost:7777');
 //Local
 //192.168.1.3:7777
 
 //AWS server instance
 //ec2-18-218-46-245.us-east-2.compute.amazonaws.com
+
+//Public ip w/ port
+//http://18.220.237.168:7777
 
 //send message to server console to monitor user logins
 socket.emit('connected', {
@@ -70,8 +73,6 @@ socket.on('connected', user => {
 
       var img_tag = document.createElement("img");
       img_tag.id = user_name + "_typing_indicator";
-      console.log('trying to get to: ' + img_tag.id);
-
       img_tag.classList.add("activity_bubble");
 
       var name_tag = document.createElement("p");
@@ -183,9 +184,6 @@ socket.on('typing', users => {
   //add typing animation to user activity bubble
   for (var typing_user in users_typing) {
     var typing_indicator = document.getElementById(users_typing[typing_user] + '_typing_indicator');
-
-    console.log(typing_user);
-    console.log(typing_indicator);
 
     typing_indicator.classList.add("typing");
   }

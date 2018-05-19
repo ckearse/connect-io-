@@ -61,7 +61,7 @@ body {
   overflow-x: hidden;
   border-radius: 5px;
   min-width: 195px;
-  width: 80%;
+  width: 65%;
   height: 100%;
   display: inline-block;
   border: solid 1px rgb(88, 184, 187);
@@ -69,13 +69,11 @@ body {
 
 #chat-indicator {
   padding: 1px 0px 1px 5px;
-  /* background-color: rgb(35, 184, 187); */
   opacity: .7;
   margin: 3px 0px 0px 1px;
   border-radius: 7px;
   max-width: 40%;
   width: fit-content;
-  /* color: white; */
   color: rgb(110, 196, 199);
   font-size: 75%;
   min-height: 14px;
@@ -123,7 +121,6 @@ body {
 
 #split_content {
   height: 75%;
-  /* color: white; */
 }
 
 #side-content {
@@ -133,7 +130,8 @@ body {
   color: white;
   border-radius: 3px;
   padding: 2px 9px 3px 9px;
-  width: 10%;
+  width: 27%;
+  margin-left: 1%;
 }
 
 .activity_bubble {
@@ -155,6 +153,13 @@ body {
 
 .users_div {
   display: block;
+}
+
+/* if device width < 325px then hide side-container */
+@media only screen and (max-width: 400px) {
+  #side-content {
+    visibility: hidden;
+  }
 }
 
 @keyframes typing_animation {
