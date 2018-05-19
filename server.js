@@ -35,8 +35,16 @@ io.on('connection', socket => {
 
   socket.on('connected', user => {
 
+    console.log('**********************************************************************************************************************');
+
     users[socket.id] = user.username;
-    io.emit('connected', user);
+      io.emit('connected', {
+        username: user.username,
+        users: users
+      }
+    
+    );
+    console.log(users);
     console.log(user.username + ' has connected')
   }),
 
@@ -46,6 +54,8 @@ io.on('connection', socket => {
     if(users[socket.id] !== null){
       io.emit('disconnected', users[socket.id]);
       console.log(users[socket.id] + ' has disconnected')
+
+      delete users[socket.id];
     } 
   });
 
