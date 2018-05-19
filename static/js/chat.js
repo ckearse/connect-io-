@@ -1,4 +1,14 @@
-var socket = io.connect('http://localhost:7777');
+var socket = io.connect('http://18.220.237.168:7777');
+
+socket.on('connect_error', error =>{
+  console.log('unable to connect');
+
+  display_timeout_msg();
+  clear_users(users_div);
+
+  socket.close();
+});
+
 //Local
 //192.168.1.3:7777
 
@@ -21,12 +31,31 @@ var message_input = document.getElementById("message_input");
 var btn = document.getElementById('send_btn');
 var chat_indicator = document.getElementById('chat-indicator');
 var side_content = document.getElementById('side-content');
+var users_div = document.getElementById("users_div");
 
 //auto scroll newest messages into view
 function chat_auto_scroll(element_to_scroll) {
   element_to_scroll.scrollIntoView(false);
 
 };
+
+//If connetion to server is interrupted, notify the user before socket is terminated
+function display_timeout_msg(){
+  var p_tag = document.createElement("p");
+  p_tag.classList.add("chat_message_p");
+  p_tag.classList.add("disconnected_notification");
+  p_tag.innerHTML += "Your connection has timed out!";
+  chat_area.appendChild(p_tag);
+
+  chat_auto_scroll(chat_area);
+
+};
+
+function clear_users(users){
+
+  //Indicate disconnect status in activity pane by removing all users
+  users.remove();
+}
 
 //Send message
 function sendMessage() {
@@ -82,7 +111,7 @@ socket.on('connected', user => {
       status_tag.appendChild(img_tag);
       status_tag.appendChild(name_tag);
 
-      side_content.appendChild(status_tag);
+      users_div.appendChild(status_tag);
     }
 
   }
@@ -106,6 +135,8 @@ socket.on('disconnected', user => {
 
   var disc_user = user;
 
+  if(user !== null || undefined){
+
   var p_tag = document.createElement("p");
   p_tag.classList.add("chat_message_p");
   p_tag.classList.add("disconnect_notification");
@@ -122,6 +153,7 @@ socket.on('disconnected', user => {
   }
 
   chat_auto_scroll(chat_area);
+}
 });
 
 socket.on('chat', data => {
@@ -186,5 +218,6 @@ socket.on('typing', users => {
     var typing_indicator = document.getElementById(users_typing[typing_user] + '_typing_indicator');
 
     typing_indicator.classList.add("typing");
+    console.log(typing_indicator);
   }
 });

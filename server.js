@@ -32,6 +32,7 @@ var io = socket(server);
 var users = {};
 var users_typing = [];
 
+
 io.on('connection', socket => {
   console.log('socket connection established!');
 
@@ -52,7 +53,7 @@ io.on('connection', socket => {
     socket.on('disconnecting', function () {
 
       //emit message that user has left chat by referencing users[socket.id]
-      if (users[socket.id] !== null) {
+      if (users[socket.id] !== undefined) {
         io.emit('disconnected', users[socket.id]);
         console.log(users[socket.id] + ' has disconnected')
 
@@ -61,6 +62,9 @@ io.on('connection', socket => {
     });
 
   socket.on('typing', user => {
+    
+    
+
     if (!users_typing.includes(user.username)) {
       users_typing.push(user.username);
     }

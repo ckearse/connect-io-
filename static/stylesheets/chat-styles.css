@@ -94,6 +94,11 @@ body {
   min-width: 170px;
 }
 
+.disconnected_notification{
+  background-color: rgba(105, 45, 45, 0.582);
+  color: white;
+}
+
 .chat_message_p {
   border: solid 1px rgb(88, 184, 187);
   margin: 5px;
